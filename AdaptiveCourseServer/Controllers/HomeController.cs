@@ -14,5 +14,10 @@ namespace AdaptiveCourseServer.Controllers
             bool result = CheckSolution.CheckSolution.Solution(OrientedGraph);
             return Content(result.ToString());
         }
+
+        public IActionResult Index()
+        {
+            return Content("Hello");
+        }
     }
 }
