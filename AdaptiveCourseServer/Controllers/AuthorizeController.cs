@@ -12,8 +12,8 @@ namespace AdaptiveCourseServer.Controllers
 {
     public class AuthorizeController : Controller
     {
-        private UserContext db;
-        public AuthorizeController(UserContext context)
+        private Context db;
+        public AuthorizeController(Context context)
         {
             db = context;
         }

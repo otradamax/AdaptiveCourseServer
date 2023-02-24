@@ -24,13 +24,7 @@ namespace AdaptiveCourseServer.CheckSolution
             { 1, 1, 1, 0 },
             { 1, 1, 1, 1 }
         };
-        private static int[] _Y = new int[] 
-        { 
-            1, 1, 0, 0, 
-            1, 1, 0, 0, 
-            0, 1, 1, 0, 
-            0, 0, 1, 1
-        };
+        private static List<byte> _Y = new List<byte>();
 
         private static Dictionary<string, int?> ElementsOutputInitialization(Dictionary<string, List<string>> OrientedGraph, int testNumber)
         {
@@ -72,10 +66,22 @@ namespace AdaptiveCourseServer.CheckSolution
             return result;
         }
 
-        public static bool Solution(Dictionary<string, List<string>> OrientedGraph)
+        public static bool Solution(Dictionary<string, List<string>> OrientedGraph, string expectedOutput)
         {
+            foreach(byte ch in expectedOutput)
+            {
+                if (ch == 49)
+                {
+                    _Y.Add(1);
+                }
+                else if (ch == 48)
+                {
+                    _Y.Add(0);
+                }
+            }
+
             List<int> resultY = new List<int>();
-            for (int i = 0; i < _Y.Length; i++)
+            for (int i = 0; i < _Y.Count; i++)
             {
                 bool isCompleted = false;
                 int repeatNum = 0;

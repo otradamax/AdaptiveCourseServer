@@ -2,10 +2,13 @@
 
 namespace AdaptiveCourseServer.Models
 {
-    public class UserContext : DbContext
+    public class Context : DbContext
     {
         public DbSet<User> Users { get; set; }
-        public UserContext(DbContextOptions<UserContext> options) : base (options)
+
+        public DbSet<SchemeTask> SchemeTasks { get; set; }
+
+        public Context(DbContextOptions<Context> options) : base (options)
         {
             Database.EnsureCreated();
         }
