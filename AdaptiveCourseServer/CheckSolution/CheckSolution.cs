@@ -26,10 +26,10 @@ namespace AdaptiveCourseServer.CheckSolution
         };
         private static int[] _Y = new int[] 
         { 
-            0, 0, 0, 0, 
-            0, 1, 1, 1, 
-            0, 1, 1, 1, 
-            0, 1, 1, 1
+            1, 1, 0, 0, 
+            1, 1, 0, 0, 
+            0, 1, 1, 0, 
+            0, 0, 1, 1
         };
 
         private static Dictionary<string, int?> ElementsOutputInitialization(Dictionary<string, List<string>> OrientedGraph, int testNumber)
@@ -86,12 +86,19 @@ namespace AdaptiveCourseServer.CheckSolution
                     isCompleted = true;
                     foreach (KeyValuePair<string, List<string>> nodesPair in OrientedGraph)
                     {
-                        if (nodesPair.Value.Count > 0 && !nodesPair.Value.Any(x => ElementsOutput[x] == null))
+                        if (nodesPair.Value.Count > 0 && !nodesPair.Value.Any(x => ElementsOutput[x.Replace("!", "")] == null))
                         {
                             List<int> inputs = new List<int>();
                             foreach (string input in nodesPair.Value)
                             {
-                                inputs.Add(ElementsOutput[input].Value);
+                                if (Regex.IsMatch(input, @"(\d)!$"))
+                                {
+                                    inputs.Add(ElementsOutput[input.Replace("!", "")].Value == 0 ? 1 : 0);
+                                }
+                                else
+                                {
+                                    inputs.Add(ElementsOutput[input.Replace("!", "")].Value);
+                                }
                             }
                             int result = MakeOperation(inputs, nodesPair.Key);
                             ElementsOutput[nodesPair.Key] = result;
@@ -114,6 +121,7 @@ namespace AdaptiveCourseServer.CheckSolution
                     }
                 }
                 while (!isCompleted || repeatNum > 0);
+                resultY.Add(ElementsOutput["Y"].Value);
                 if (_Y[i] != ElementsOutput["Y"])
                 {
                     return false;
