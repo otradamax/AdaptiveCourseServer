@@ -19,8 +19,9 @@ namespace AdaptiveCourseServer.Controllers
         [HttpPost]
         public IActionResult LogicScheme([FromBody] CheckScheme checkScheme)
         {
-            bool result = CheckSolution.CheckSolution.Solution(checkScheme.OrientedGraph, 
-                db.SchemeTasks.FirstOrDefault(t => t.Id == checkScheme.Id).ExpectedOutput);
+            SchemeTask task = db.SchemeTasks.FirstOrDefault(t => t.Id == checkScheme.Id);
+            bool result = CheckSolution.CheckSolution.Solution(checkScheme.OrientedGraph,
+                task.ExpectedOutput, task.InputsNumber);
             return Content(result.ToString());
         }
 
@@ -28,7 +29,7 @@ namespace AdaptiveCourseServer.Controllers
         [HttpGet]
         public IActionResult GetTask()
         {
-            SchemeTask task = db.SchemeTasks.FirstOrDefault(t => t.Id == 1);
+            SchemeTask task = db.SchemeTasks.FirstOrDefault(t => t.Id == 5);
             return Json(task);
         }
     }

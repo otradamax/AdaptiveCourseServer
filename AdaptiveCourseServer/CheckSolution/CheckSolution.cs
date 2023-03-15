@@ -5,26 +5,27 @@ namespace AdaptiveCourseServer.CheckSolution
 {
     public static class CheckSolution
     {
-        private static int[,] _X = new int[,]
-        {
-            { 0, 0, 0, 0 },
-            { 0, 0, 0, 1 },
-            { 0, 0, 1, 0 },
-            { 0, 0, 1, 1 },
-            { 0, 1, 0, 0 },
-            { 0, 1, 0, 1 },
-            { 0, 1, 1, 0 },
-            { 0, 1, 1, 1 },
-            { 1, 0, 0, 0 },
-            { 1, 0, 0, 1 },
-            { 1, 0, 1, 0 },
-            { 1, 0, 1, 1 },
-            { 1, 1, 0, 0 },
-            { 1, 1, 0, 1 },
-            { 1, 1, 1, 0 },
-            { 1, 1, 1, 1 }
-        };
+        private static List<List<int>> _X;
         private static List<byte> _Y = new List<byte>();
+
+        private static void TruthTableInitialization(int _InputCount)
+        {
+            _X = new List<List<int>>();
+            for (int i = 0; i < Math.Pow(_InputCount, 2); i++)
+            {
+                List<int> trueTableRow = new List<int>();
+                string iDoubled = Convert.ToString(i, 2);
+                for (int j = 0; j < _InputCount - iDoubled.Length; j++)
+                {
+                    trueTableRow.Add(0);
+                }
+                for (int j = 0; j < iDoubled.Length; j++)
+                {
+                    trueTableRow.Add(Convert.ToByte(iDoubled[j]) == 48 ? 0 : 1);
+                }
+                _X.Add(trueTableRow);
+            }
+        }
 
         private static Dictionary<string, int?> ElementsOutputInitialization(Dictionary<string, List<string>> OrientedGraph, int testNumber)
         {
@@ -40,7 +41,7 @@ namespace AdaptiveCourseServer.CheckSolution
                 {
                     int serialNumber;
                     int.TryParse(nodesPair.Key.Substring("X".Length), out serialNumber);
-                    ElementsOutput.Add(nodesPair.Key, _X[testNumber, serialNumber]);
+                    ElementsOutput.Add(nodesPair.Key, _X[testNumber][serialNumber]);
                 }
             }
             return ElementsOutput;
@@ -66,9 +67,10 @@ namespace AdaptiveCourseServer.CheckSolution
             return result;
         }
 
-        public static bool Solution(Dictionary<string, List<string>> OrientedGraph, string expectedOutput)
+        public static bool Solution(Dictionary<string, List<string>> OrientedGraph, string expectedOutput, int inputsNumber)
         {
-            foreach(byte ch in expectedOutput)
+            TruthTableInitialization(inputsNumber);
+            foreach (byte ch in expectedOutput)
             {
                 if (ch == 49)
                 {
